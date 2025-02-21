@@ -30,14 +30,47 @@
     BONUS: WHY does it work this way?
 */
 
-const promiseProblem = ()=>{
-    console.log("Program started");
-    const data = {data: "Hello, friend!", error: null};
-    const promise1 = new Promise((resolve,reject)=>{
-        setTimeout(()=>{
-            resolve(data);
-        }, 5000);
-    });
+import { log } from "node:console";
+
+const promiseProblem = () => {
+   console.log("Program started");
+   const data = { data: "Hello, friend!", error: null };
+   const promise1 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+         resolve(data);
+      }, 5000);
+   });
+   console.log("Pending state of ", promise1);
+   console.log("Program in progress...");
+
+   //promise chain 1
+   promise1
+   .then((data) => {
+      console.log(data.data, "chain 1");
+      return new Promise((resolve) => {
+         setTimeout(()=>{
+            resolve("First promise chain complete!")
+         }, 2000);
+      });
+   })
+   .then((data)=>{
+      console.log(data);
+   })
+   
+   //promise chain 2
+   promise1
+   .then((data)=>{
+      console.log(data.data," chain 2");
+      return new Promise((resolve) => {
+         setTimeout(()=>{
+            resolve("Second promise chain complete!");
+         },10000)
+      })
+   })
+   .then((data)=>{
+      console.log(data);
+   })
+
 }
 
 promiseProblem();
