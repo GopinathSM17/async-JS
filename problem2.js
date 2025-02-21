@@ -18,10 +18,16 @@ const lipsumReadWrite = function () {
             console.error("reading file is Unsuccessful");
         }
         else {
-            const stringData = JSON.stringify(data, null, 2);
-            const upperCaseStringData = stringData.toUpperCase();
+            const upperCaseLipsumData = data.toUpperCase();
+            const upperCaseSentences = upperCaseLipsumData.split(/(?<=[.!?])(?:\s+|\\n+)/);
+            const upperCaseSentencesArray = [];
+            for (const line in upperCaseSentences) {
+                const eachLine = upperCaseSentences[line];
+                upperCaseSentencesArray.push(eachLine.replaceAll("\\n", " ").replaceAll("\\", " "));
+            }
+
             const upperCaseLipsumFile = `lipsumUpperCaseOutput.txt`;
-            fs.writeFile(`./lipsumDir/${upperCaseLipsumFile}`, upperCaseStringData, (err) => {
+            fs.writeFile(`./lipsumDir/${upperCaseLipsumFile}`, JSON.stringify(upperCaseSentencesArray, null, 2), (err) => {
                 if (err) {
                     console.error("write the Uppercase file unsuccessful");
                 }
@@ -40,16 +46,22 @@ const lipsumReadWrite = function () {
                             console.error("reading the file " + upperCaseLipsumFile + " is unsuccessfull");
                         }
                         else {
-                            const lowerCaseLipsumData = data.toLowerCase();
-                            const sentences = lowerCaseLipsumData.split(/(?<=[.!?])\s+/);
+                            const uppercaseArray = JSON.parse(data);
+                            const lowerCaseLipsumArray = [];
+
+                            for (const line in uppercaseArray) {
+                                const element = uppercaseArray[line];
+                                lowerCaseLipsumArray.push(element.toLowerCase());
+                            }
+
                             const lowerCaseLipsumFile = "lipsumLowerCaseOutput.txt";
-                            fs.writeFile(`./lipsumDir/${lowerCaseLipsumFile}`, JSON.stringify(sentences,null,2), (err)=>{
-                                if(err){
+                            fs.writeFile(`./lipsumDir/${lowerCaseLipsumFile}`, JSON.stringify(lowerCaseLipsumArray, null, 2), (err) => {
+                                if (err) {
                                     console.error("write file sentences is unsuccessfull");
                                 }
-                                else{
+                                else {
                                     console.log("write file sentences is successfull")
-                                    fs.appendFile(`./lipsumDir/filenames.txt`, `${lowerCaseLipsumFile}\n`, (err)=>{
+                                    fs.appendFile(`./lipsumDir/filenames.txt`, `${lowerCaseLipsumFile}\n`, (err) => {
                                         if (err) {
                                             console.error("writeFile on fileName is unsuccessful");
                                         }
@@ -57,47 +69,58 @@ const lipsumReadWrite = function () {
                                             console.log("writeFile on filenames.txt is successful");
                                         }
                                     });
-                                    const sorteddata = sentences.sort((a, b) => {
-                                        let firstLetterA = a.charAt(0).toLowerCase();
-                                        let firstLetterB = b.charAt(0).toLowerCase();
-                                        return firstLetterA.localeCompare(firstLetterB);
-                                      });
-                                    // console.log(sentences);
-                                    const sortedLipsumFile = "lipsumSortOutput.txt";
-                                    fs.writeFile(`./lipsumDir/${sortedLipsumFile}`, JSON.stringify(sentences,null,2), (err)=>{
-                                        if(err){
-                                            console.error("write file on sort file is Unsuccess");
+
+                                    fs.readFile(`./lipsumDir/${lowerCaseLipsumFile}`, "utf-8", (err, data) => {
+                                        if (err) {
+                                            console.error("read file of lowcase file is unsuccess");
                                         }
-                                        else{
-                                            console.log("write file for LipsumSortFile is success");
-                                            fs.appendFile(`./lipsumDir/filenames.txt`, `${sortedLipsumFile}`, (err)=>{
-                                                if(err){
-                                                    console.error("writefile in filenames.txt in unsucess");
+                                        else {
+                                            console.log("read file of lower case file is success");
+
+                                            const sortedLipsumFile = "lipsumSortOutput.txt";
+                                            
+                                            const lowerCaseArray = JSON.parse(data);
+
+                                            const sortedArray = lowerCaseArray.sort();
+
+                                            fs.writeFile(`./lipsumDir/${sortedLipsumFile}`, JSON.stringify(sortedArray, null, 2), (err) => {
+                                                if (err) {
+                                                    console.error("write file on sort file is Unsuccess");
                                                 }
-                                                else{
-                                                    console.log("writeFile in filenames.txt is successfull");
+                                                else {
+                                                    console.log("write file for LipsumSortFile is success");
+                                                    fs.appendFile(`./lipsumDir/filenames.txt`, `${sortedLipsumFile}`, (err) => {
+                                                        if (err) {
+                                                            console.error("writefile in filenames.txt in unsucess");
+                                                        }
+                                                        else {
+                                                            console.log("writeFile in filenames.txt is successfull");
+                                                        }
+                                                    });
+                                                    fs.readFile("./lipsumDir/filenames.txt", "utf-8", (err, data) => {
+                                                        if (err) {
+                                                            console.error("reading the filenames.txt file is unsuccessful");
+                                                        }
+                                                        else {
+                                                            console.log("redaing the fileNames.txt is successful");
+
+                                                            // commented the deleting process for clear understanding
+                                                            // const eachFile = data.split('\n');
+                                                            // console.log(eachFile);
+                                                            // eachFile.forEach(fileName => {
+                                                            //     fs.rm(`./lipsumDir/${fileName}`, (err)=>{
+                                                            //         if(err){
+                                                            //             console.error("deletion of file unsucessfull");
+                                                            //         }
+                                                            //         else{
+                                                            //             console.log(`deletion of file name ${fileName} is succesful`);
+                                                            //         }
+                                                            //     });
+                                                            // });
+                                                        }
+                                                    });
                                                 }
-                                            });
-                                            fs.readFile("./lipsumDir/filenames.txt", "utf-8", (err,data)=>{
-                                                if(err){
-                                                    console.error("reading the filenames.txt file is unsuccessful");
-                                                }
-                                                else{
-                                                    console.log("redaing the fileNames.txt is successful");
-                                                    const eachFile = data.split('\n');
-                                                    // console.log(eachFile);
-                                                    // eachFile.forEach(fileName => {
-                                                    //     fs.rm(`./lipsumDir/${fileName}`, (err)=>{
-                                                    //         if(err){
-                                                    //             console.error("deletion of file unsucessfull");
-                                                    //         }
-                                                    //         else{
-                                                    //             console.log(`deletion of file name ${fileName} is succesful`);
-                                                    //         }
-                                                    //     });
-                                                    // });
-                                                }
-                                            });
+                                            })
                                         }
                                     })
                                 }
@@ -109,4 +132,4 @@ const lipsumReadWrite = function () {
         }
     });
 }
-export {lipsumReadWrite}
+export { lipsumReadWrite }
