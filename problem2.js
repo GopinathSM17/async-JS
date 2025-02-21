@@ -12,7 +12,7 @@ import fs from 'fs'
 
 
 
-const lipsumReadWrite = () => {
+const lipsumReadWrite = function () {
     fs.readFile('./data/lipsum.txt', 'utf8', (err, data) => {
         if (err) {
             console.error("reading file is Unsuccessful");
@@ -109,4 +109,4 @@ const lipsumReadWrite = () => {
         }
     });
 }
-console.log(lipsumReadWrite());
+export {lipsumReadWrite}
