@@ -10,5 +10,27 @@
 import fs from 'fs/promises'
 
 const writeAndDeletionOfTextFiles = ()=>{
-    
+    fs.mkdir(`../newDirectory`, {recursive : true})
+    .then (()=>{
+        for(let i=1;i<=5;i++){
+            const filePath = `file${i}.json `;
+            console.log(`file ${i} created`);
+            fs.writeFile(`../newDirectory/${filePath}`, `I'm file ${i}`, 'utf-8' )
+            .then(()=>{
+
+                // Commented this line for better understanding
+                // fs.rm(`./newDirectory/${filePath}`)
+
+                console.log(`file ${i} deleted`);
+            });
+        }
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
+}
+
+
+export {
+    writeAndDeletionOfTextFiles
 }
